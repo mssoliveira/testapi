@@ -1,5 +1,9 @@
 # testapi
 
+[![npm](https://img.shields.io/npm/v/testapi)](https://www.npmjs.com/package/testapi)
+[![Node.js](https://img.shields.io/node/v/testapi)](https://nodejs.org)
+[![License](https://img.shields.io/npm/l/testapi)](LICENSE)
+
 CLI para testes de API — rate limit, latência, stress e mais.
 
 ## Instalação
@@ -149,6 +153,17 @@ import { registerMeuTesteCommand } from './commands/meu-teste';
 
 registerMeuTesteCommand(program);
 ```
+
+## Publicação
+
+Publicação no npm é automática via GitHub Actions ao criar uma tag:
+
+```bash
+npm version patch   # 0.0.2 → 0.0.3  (ou minor / major)
+git push && git push --tags
+```
+
+O workflow `.github/workflows/publish.yml` dispara na tag, executa o build e publica no npm usando o secret `NPM_TOKEN`.
 
 ## Licença
 
