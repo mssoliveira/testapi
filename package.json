@@ -1,6 +1,6 @@
 {
   "name": "testapi",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "CLI para testes de API — rate limit, latência, stress e mais",
   "bin": {
     "testapi": "./dist/cli.js"
