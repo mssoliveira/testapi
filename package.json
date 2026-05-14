@@ -1,6 +1,6 @@
 {
   "name": "@mssoliveira/test",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "CLI para testes de API — rate limit, latência, stress e mais",
   "bin": {
     "test-api": "./dist/cli.js"
