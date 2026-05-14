@@ -1,8 +1,8 @@
-# testapi
+# test-api
 
-[![npm](https://img.shields.io/npm/v/testapi)](https://www.npmjs.com/package/testapi)
-[![Node.js](https://img.shields.io/node/v/testapi)](https://nodejs.org)
-[![License](https://img.shields.io/npm/l/testapi)](LICENSE)
+[![npm](https://img.shields.io/npm/v/test-api)](https://www.npmjs.com/package/test-api)
+[![Node.js](https://img.shields.io/node/v/test-api)](https://nodejs.org)
+[![License](https://img.shields.io/npm/l/test-api)](LICENSE)
 
 CLI para testes de API — rate limit, latência, stress e mais.
 
@@ -10,10 +10,10 @@ CLI para testes de API — rate limit, latência, stress e mais.
 
 ```bash
 # Executar sem instalar
-npx testapi <comando> [opções]
+npx test-api <comando> [opções]
 
 # Instalar globalmente
-npm install -g testapi
+npm install -g test-api
 ```
 
 **Requisito:** Node.js >= 18
@@ -25,7 +25,7 @@ npm install -g testapi
 Dispara N requisições contra um endpoint e exibe a distribuição de status HTTP — ideal para verificar se o rate limiting está funcionando corretamente.
 
 ```bash
-testapi rate-limit --url <url> [opções]
+test-api rate-limit --url <url> [opções]
 ```
 
 | Opção | Alias | Descrição | Padrão |
@@ -42,18 +42,18 @@ testapi rate-limit --url <url> [opções]
 
 ```bash
 # 50 requisições simultâneas
-testapi rate-limit -u https://api.exemplo.com/endpoint
+test-api rate-limit -u https://api.exemplo.com/endpoint
 
 # 100 req em lotes de 10, com 200ms entre lotes
-testapi rl -u https://api.exemplo.com/endpoint -n 100 -c 10 -d 200
+test-api rl -u https://api.exemplo.com/endpoint -n 100 -c 10 -d 200
 
 # Com autenticação
-testapi rl -u https://api.exemplo.com/endpoint \
+test-api rl -u https://api.exemplo.com/endpoint \
   -H "Authorization:Bearer seu-token" \
   -H "X-Api-Key:abc123"
 
 # Testar endpoint POST esperando 201
-testapi rl -u https://api.exemplo.com/users -m POST -e 201
+test-api rl -u https://api.exemplo.com/users -m POST -e 201
 ```
 
 #### Saída
@@ -85,7 +85,7 @@ Resumo:
 ## Uso como biblioteca
 
 ```typescript
-import { runRateLimitTest } from 'testapi';
+import { runRateLimitTest } from 'test-api';
 
 const result = await runRateLimitTest({
   url: 'https://api.exemplo.com/endpoint',
