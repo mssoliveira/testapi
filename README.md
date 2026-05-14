@@ -127,47 +127,6 @@ interface RateLimitResult {
 }
 ```
 
-## Desenvolvimento
-
-```bash
-# Clonar e instalar
-git clone <repo>
-pnpm install
-
-# Rodar sem build
-pnpm dev rate-limit -u https://api.exemplo.com/endpoint
-
-# Build
-pnpm build
-
-# Rodar após build
-node dist/cli.js rate-limit -u https://api.exemplo.com/endpoint
-```
-
-## Adicionar novos testes
-
-1. Criar `src/tests/meu-teste.ts` com a lógica
-2. Criar `src/commands/meu-teste.ts` com `registerMeuTesteCommand(program)`
-3. Importar e registrar em `src/cli.ts`
-
-```typescript
-// src/cli.ts
-import { registerMeuTesteCommand } from './commands/meu-teste';
-
-registerMeuTesteCommand(program);
-```
-
-## Publicação
-
-Publicação no npm é automática via GitHub Actions ao criar uma tag:
-
-```bash
-npm version patch   # 0.0.2 → 0.0.3  (ou minor / major)
-git push && git push --tags
-```
-
-O workflow `.github/workflows/publish.yml` dispara na tag, executa o build e publica no npm usando o secret `NPM_TOKEN`.
-
 ## Licença
 
 ISC

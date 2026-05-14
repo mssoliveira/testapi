@@ -3,7 +3,8 @@
   "version": "0.0.5",
   "description": "CLI para testes de API — rate limit, latência, stress e mais",
   "bin": {
-    "rate-limit": "./dist/cli.js"
+    "rate-limit": "./dist/entries/rate-limit.js",
+    "latency": "./dist/entries/latency.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
