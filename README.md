@@ -1,8 +1,8 @@
-# test-api
+# @mssoliveira/test
 
-[![npm](https://img.shields.io/npm/v/test-api)](https://www.npmjs.com/package/test-api)
-[![Node.js](https://img.shields.io/node/v/test-api)](https://nodejs.org)
-[![License](https://img.shields.io/npm/l/test-api)](LICENSE)
+[![npm](https://img.shields.io/npm/v/@mssoliveira/test)](https://www.npmjs.com/package/@mssoliveira/test)
+[![Node.js](https://img.shields.io/node/v/@mssoliveira/test)](https://nodejs.org)
+[![License](https://img.shields.io/npm/l/@mssoliveira/test)](LICENSE)
 
 CLI para testes de API — rate limit, latência, stress e mais.
 
@@ -10,10 +10,10 @@ CLI para testes de API — rate limit, latência, stress e mais.
 
 ```bash
 # Executar sem instalar
-npx test-api <comando> [opções]
+npx @mssoliveira/test <comando> [opções]
 
 # Instalar globalmente
-npm install -g test-api
+npm install -g @mssoliveira/test
 ```
 
 **Requisito:** Node.js >= 18
@@ -25,7 +25,7 @@ npm install -g test-api
 Dispara N requisições contra um endpoint e exibe a distribuição de status HTTP — ideal para verificar se o rate limiting está funcionando corretamente.
 
 ```bash
-test-api rate-limit --url <url> [opções]
+@mssoliveira/test rate-limit --url <url> [opções]
 ```
 
 | Opção | Alias | Descrição | Padrão |
@@ -42,18 +42,18 @@ test-api rate-limit --url <url> [opções]
 
 ```bash
 # 50 requisições simultâneas
-test-api rate-limit -u https://api.exemplo.com/endpoint
+@mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint
 
 # 100 req em lotes de 10, com 200ms entre lotes
-test-api rl -u https://api.exemplo.com/endpoint -n 100 -c 10 -d 200
+@mssoliveira/test rl -u https://api.exemplo.com/endpoint -n 100 -c 10 -d 200
 
 # Com autenticação
-test-api rl -u https://api.exemplo.com/endpoint \
+@mssoliveira/test rl -u https://api.exemplo.com/endpoint \
   -H "Authorization:Bearer seu-token" \
   -H "X-Api-Key:abc123"
 
 # Testar endpoint POST esperando 201
-test-api rl -u https://api.exemplo.com/users -m POST -e 201
+@mssoliveira/test rl -u https://api.exemplo.com/users -m POST -e 201
 ```
 
 #### Saída
@@ -85,7 +85,7 @@ Resumo:
 ## Uso como biblioteca
 
 ```typescript
-import { runRateLimitTest } from 'test-api';
+import { runRateLimitTest } from '@mssoliveira/test';
 
 const result = await runRateLimitTest({
   url: 'https://api.exemplo.com/endpoint',

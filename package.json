@@ -1,5 +1,5 @@
 {
-  "name": "test-api",
+  "name": "@mssoliveira/test",
   "version": "0.0.4",
   "description": "CLI para testes de API — rate limit, latência, stress e mais",
   "bin": {

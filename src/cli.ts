@@ -5,7 +5,7 @@ import { registerRateLimitCommand } from './commands/rate-limit';
 const program = new Command();
 
 program
-  .name('test-api')
+  .name('@mssoliveira/test')
   .description('CLI para testes de API — rate limit, latência, stress e mais')
   .version('0.1.0');
 
