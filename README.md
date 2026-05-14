@@ -9,7 +9,10 @@ CLI para testes de API — rate limit, latência, stress e mais.
 ## Instalação
 
 ```bash
-# Executar sem instalar
+# Executar sem instalar (Windows)
+npx @mssoliveira/test rate-limit <comando> [opções]
+
+# Executar sem instalar (Linux/Mac)
 npx @mssoliveira/test <comando> [opções]
 
 # Instalar globalmente
