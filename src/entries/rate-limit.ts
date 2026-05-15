@@ -15,6 +15,7 @@ program
   .option('-m, --method <method>', 'Método HTTP', 'GET')
   .option('-H, --header <header>', 'Adicionar header (chave:valor) — repetível', collectHeaders, [])
   .option('-e, --expected <status>', 'Status HTTP esperado como sucesso', '200')
+  .option('-r, --response-headers', 'Exibir response headers no relatório')
   .action(async (opts) => {
     const options: RateLimitOptions = {
       url: opts.url,
@@ -24,6 +25,7 @@ program
       method: (opts.method as string).toUpperCase(),
       headers: parseHeaders(opts.header as string[]),
       expectedStatus: parseInt(opts.expected),
+      showResponseHeaders: opts.responseHeaders as boolean,
     };
 
     try {

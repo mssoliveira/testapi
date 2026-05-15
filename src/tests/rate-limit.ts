@@ -8,6 +8,7 @@ export interface RateLimitOptions {
   method: string;
   headers?: Record<string, string>;
   expectedStatus: number;
+  showResponseHeaders?: boolean;
 }
 
 export interface RateLimitResult {
@@ -16,18 +17,28 @@ export interface RateLimitResult {
   durationMs: number;
   successCount: number;
   throttledCount: number;
+  responseHeaders?: Record<string, string>;
+}
+
+interface RequestResult {
+  status: number;
+  headers: Record<string, string>;
 }
 
 async function sendRequest(
   url: string,
   method: string,
   headers: Record<string, string>,
-): Promise<number> {
+): Promise<RequestResult> {
   try {
     const res = await fetch(url, { method, headers });
-    return res.status;
+    const responseHeaders: Record<string, string> = {};
+    res.headers.forEach((value: string, key: string) => {
+      responseHeaders[key] = value;
+    });
+    return { status: res.status, headers: responseHeaders };
   } catch {
-    return 0;
+    return { status: 0, headers: {} };
   }
 }
 
@@ -36,7 +47,7 @@ async function runBatch(
   method: string,
   headers: Record<string, string>,
   size: number,
-): Promise<number[]> {
+): Promise<RequestResult[]> {
   return Promise.all(Array.from({ length: size }, () => sendRequest(url, method, headers)));
 }
 
@@ -57,13 +68,13 @@ export async function runRateLimitTest(opts: RateLimitOptions): Promise<RateLimi
   console.log('');
 
   const start = Date.now();
-  const statuses: number[] = [];
+  const results: RequestResult[] = [];
   let sent = 0;
 
   while (sent < count) {
     const batchSize = Math.min(concurrency, count - sent);
     const batch = await runBatch(url, method, headers, batchSize);
-    statuses.push(...batch);
+    results.push(...batch);
     sent += batchSize;
 
     const filled = Math.round((sent / count) * 25);
@@ -77,9 +88,9 @@ export async function runRateLimitTest(opts: RateLimitOptions): Promise<RateLimi
 
   const durationMs = Date.now() - start;
 
-  const statusCounts = statuses.reduce(
-    (acc, s) => {
-      acc[s] = (acc[s] || 0) + 1;
+  const statusCounts = results.reduce(
+    (acc, r) => {
+      acc[r.status] = (acc[r.status] || 0) + 1;
       return acc;
     },
     {} as Record<number, number>,
@@ -87,13 +98,15 @@ export async function runRateLimitTest(opts: RateLimitOptions): Promise<RateLimi
 
   const successCount = statusCounts[expectedStatus] ?? 0;
   const throttledCount = statusCounts[429] ?? 0;
+  const lastHeaders = results[results.length - 1]?.headers;
 
   printResults(
-    { statusCounts, totalRequests: count, durationMs, successCount, throttledCount },
+    { statusCounts, totalRequests: count, durationMs, successCount, throttledCount, responseHeaders: lastHeaders },
     expectedStatus,
+    opts.showResponseHeaders ?? false,
   );
 
-  return { statusCounts, totalRequests: count, durationMs, successCount, throttledCount };
+  return { statusCounts, totalRequests: count, durationMs, successCount, throttledCount, responseHeaders: lastHeaders };
 }
 
 function statusColor(status: number): chalk.Chalk {
@@ -104,8 +117,8 @@ function statusColor(status: number): chalk.Chalk {
   return chalk.red;
 }
 
-function printResults(result: RateLimitResult, expectedStatus: number): void {
-  const { statusCounts, totalRequests, durationMs, successCount, throttledCount } = result;
+function printResults(result: RateLimitResult, expectedStatus: number, showResponseHeaders = false): void {
+  const { statusCounts, totalRequests, durationMs, successCount, throttledCount, responseHeaders } = result;
 
   console.log(chalk.bold('Resultados por Status:'));
   console.log('─'.repeat(48));
@@ -132,5 +145,17 @@ function printResults(result: RateLimitResult, expectedStatus: number): void {
   }
   console.log(`  Duração:        ${(durationMs / 1000).toFixed(2)}s`);
   console.log(`  Req/s:          ${((totalRequests / durationMs) * 1000).toFixed(1)}`);
+
+  if (showResponseHeaders && responseHeaders && Object.keys(responseHeaders).length > 0) {
+    console.log('');
+    console.log(chalk.bold('Response Headers (última requisição):'));
+    console.log('─'.repeat(48));
+    const keyWidth = Math.max(...Object.keys(responseHeaders).map((k) => k.length));
+    for (const [key, value] of Object.entries(responseHeaders).sort()) {
+      console.log(`  ${chalk.cyan(key.padEnd(keyWidth))}  ${value}`);
+    }
+    console.log('─'.repeat(48));
+  }
+
   console.log('');
 }
