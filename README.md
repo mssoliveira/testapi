@@ -23,7 +23,7 @@ npm install -g @mssoliveira/test
 
 ## Comandos
 
-### `rate-limit` (alias: `rl`)
+### `rate-limit`
 
 Dispara N requisições contra um endpoint e exibe a distribuição de status HTTP — ideal para verificar se o rate limiting está funcionando corretamente.
 
@@ -48,15 +48,15 @@ Dispara N requisições contra um endpoint e exibe a distribuição de status HT
 @mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint
 
 # 100 req em lotes de 10, com 200ms entre lotes
-@mssoliveira/test rl -u https://api.exemplo.com/endpoint -n 100 -c 10 -d 200
+@mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint -n 100 -c 10 -d 200
 
 # Com autenticação
-@mssoliveira/test rl -u https://api.exemplo.com/endpoint \
+@mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint \
   -H "Authorization:Bearer seu-token" \
   -H "X-Api-Key:abc123"
 
 # Testar endpoint POST esperando 201
-@mssoliveira/test rl -u https://api.exemplo.com/users -m POST -e 201
+@mssoliveira/test rate-limit -u https://api.exemplo.com/users -m POST -e 201
 ```
 
 #### Saída
