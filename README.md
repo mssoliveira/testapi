@@ -9,11 +9,9 @@ CLI para testes de API — rate limit, latência, stress e mais.
 ## Instalação
 
 ```bash
-# Executar sem instalar (Windows)
-npx @mssoliveira/test rate-limit <comando> [opções]
-
-# Executar sem instalar (Linux/Mac)
-npx @mssoliveira/test <comando> [opções]
+# Executar sem instalar
+npx -p @mssoliveira/test rate-limit [opções]
+npx -p @mssoliveira/test latency [opções]
 
 # Instalar globalmente
 npm install -g @mssoliveira/test
@@ -28,7 +26,7 @@ npm install -g @mssoliveira/test
 Dispara N requisições contra um endpoint e exibe a distribuição de status HTTP — ideal para verificar se o rate limiting está funcionando corretamente.
 
 ```bash
-@mssoliveira/test rate-limit --url <url> [opções]
+npx -p @mssoliveira/test rate-limit --url <url> [opções]
 ```
 
 | Opção | Alias | Descrição | Padrão |
@@ -40,23 +38,27 @@ Dispara N requisições contra um endpoint e exibe a distribuição de status HT
 | `--method` | `-m` | Método HTTP | `GET` |
 | `--header` | `-H` | Header `chave:valor` (repetível) | — |
 | `--expected` | `-e` | Status esperado como sucesso | `200` |
+| `--response-headers` | `-r` | Exibir response headers no relatório | — |
 
 #### Exemplos
 
 ```bash
 # 50 requisições simultâneas
-@mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint
+npx -p @mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint
 
 # 100 req em lotes de 10, com 200ms entre lotes
-@mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint -n 100 -c 10 -d 200
+npx -p @mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint -n 100 -c 10 -d 200
 
 # Com autenticação
-@mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint \
+npx -p @mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint \
   -H "Authorization:Bearer seu-token" \
   -H "X-Api-Key:abc123"
 
 # Testar endpoint POST esperando 201
-@mssoliveira/test rate-limit -u https://api.exemplo.com/users -m POST -e 201
+npx -p @mssoliveira/test rate-limit -u https://api.exemplo.com/users -m POST -e 201
+
+# Exibir response headers no relatório
+npx -p @mssoliveira/test rate-limit -u https://api.exemplo.com/endpoint -r
 ```
 
 #### Saída
@@ -83,6 +85,15 @@ Resumo:
   Bloqueado (429): 15 (15.0%)
   Duração:         1.23s
   Req/s:           81.3
+
+Response Headers (última requisição):
+────────────────────────────────────────────────
+  connection          keep-alive
+  content-type        application/json; charset=utf-8
+  x-ratelimit-limit   100
+  x-ratelimit-remaining  61
+  x-ratelimit-reset   30
+────────────────────────────────────────────────
 ```
 
 ## Uso como biblioteca
@@ -98,11 +109,13 @@ const result = await runRateLimitTest({
   method: 'GET',
   headers: { Authorization: 'Bearer token' },
   expectedStatus: 200,
+  showResponseHeaders: true,
 });
 
 console.log(result.statusCounts);
 console.log(result.successCount);
 console.log(result.throttledCount);
+console.log(result.responseHeaders);
 ```
 
 ### Tipos
@@ -111,11 +124,12 @@ console.log(result.throttledCount);
 interface RateLimitOptions {
   url: string;
   count: number;
-  concurrency?: number;  // padrão: count (todas simultâneas)
-  delay?: number;        // ms entre lotes, padrão: 0
+  concurrency?: number;         // padrão: count (todas simultâneas)
+  delay?: number;               // ms entre lotes, padrão: 0
   method: string;
   headers?: Record<string, string>;
   expectedStatus: number;
+  showResponseHeaders?: boolean;
 }
 
 interface RateLimitResult {
@@ -124,6 +138,7 @@ interface RateLimitResult {
   durationMs: number;
   successCount: number;
   throttledCount: number;
+  responseHeaders?: Record<string, string>;
 }
 ```
 
