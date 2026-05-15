@@ -44,7 +44,7 @@ Publicação no npm é automática via GitHub Actions ao criar uma tag:
 
 ```bash
 npm version patch   # 0.0.2 → 0.0.3  (ou minor / major)
-git push && git push --tags
+npm version patch && git push && git push --tags
 ```
 
 O workflow `.github/workflows/publish.yml` dispara na tag, executa o build e publica no npm usando o secret `NPM_TOKEN`.
